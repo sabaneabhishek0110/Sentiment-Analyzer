@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment_Analysis</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+    <style>
+        body {
+            border: none;
+            border-radius: 10px;
+        }
+
+        .btn {
+            border: 2px transparent;
+            border-radius: 20px;
+            background-color: rgb(34, 1, 61);
+            color: white;
+            font-weight: 500;
+            padding: 10px;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: aqua;
+            color: black;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            grid-template-areas: 
+                "item1 item1"
+                "item2 item4"
+                "item3 item4";
+            grid-gap: 2px;
+            grid-column-gap: 25px;
+        }
+
+        .item {
+            align-content: center;
+            text-align: center;
+        }
+
+        .item1 { grid-area: item1; }
+        .item2 { grid-area: item2; }
+        .item3 { grid-area: item3; }
+        .item4 { grid-area: item4; }
+        #title {
+            width: 1266px;
+            height: 125px;
+            font-size: 50px;
+            font-family: "Sofia", sans-serif;
+            align-content: center;
+            align-items: center;
+            background-color: #dee2f2;
+            color: rgb(255, 136, 0);
+            border-radius: 10px;
+        }
+
+        #input_data {
+            width: 632px;
+            height: 150px;
+            font-size: 50px;
+            align-content: center;
+            align-items: center;
+            border-radius: 10px;
+        }
+
+        #overall {
+            width: 632px;
+            height: 189px;
+            border-radius: 10px;
+        }
+
+        #graph {
+            width: 585px;
+            height: 342px;
+            font-size: 50px;
+            align-content: center;
+            align-items: center;
+            border-radius: 10px;
+        }
+
+        .chat_container {
+            width: 100%;
+            height: 50px;
+            align-content: center;
+            border-radius: 10px;
+        }
+
+        .input_container {
+            width: 80%;
+            display: flex;
+            margin-left: 50px;
+            padding: 5px 10px;
+            background-color: rgb(230, 235, 235);
+            border: none;
+            border-radius: 30px;
+        }
+
+        .chat_input {
+            flex-grow: 1;
+            border: none;
+            outline: none;
+            padding: 10px;
+            border-radius: 20px;
+            font-size: 16px;
+            background-color: #f9f9f9;
+        }
+
+        .chat_input-input::placeholder {
+            color: black;
+        }
+
+        .voice_button {
+            width: 3rem;
+            border: none;
+            background-color: #f9f9f9;
+            padding: 10px 20px;
+            margin-left: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .voice_button:hover {
+            background-color: aqua;
+        }
+
+        .overall_container {
+            margin-top: 20px;
+            margin-left: 60px;
+            font-size: 40px;
+            color: aqua;
+        }
+
+        .emo {
+            margin-left: 80px;
+            font-size: 30px;
+            color: rgb(73, 243, 73);
+        }
+
+        .main_container {
+            display: grid;
+            background-color: #f9f9f9;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="item item1" id="title">
+            <img src="/public/front_end/title_emoji.png" alt="Description of the image"> Sentiment Analyzer
+        </div>
+        <div class="chat_container item item2" id="input_data">
+            <form id="analysisForm" method="post" action="/analyze">
+                <div class="input_container">
+                    <input type="text" name="analysiscontent" placeholder="Type Your Text Here..." id="input1" class="chat_input">
+                    <button type="button" class="voice_button"><i class="fa fa-microphone" style="font-size: 15px; justify-content: center;"></i></button>
+                </div>
+                <div>
+                    <button type="submit" class="btn">Submit To Analyze</button>
+                </div>
+            </form>
+        </div>
+        <div class="item3" id="overall">
+            <div class="overall_container">
+                Overall Emotion:
+            </div>
+            <div class="emo">
+                <p><strong>Positive</strong> <span>😀</span></p>
+            </div>
+        </div>
+        <div class="item item4" id="graph">
+            <canvas id="myChart" style="width: 100%; max-width: 600px;"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const defaultData = {
+            'anger': 0,
+            'anticipation': 0,
+            'disgust': 0,
+            'fear': 0,
+            'joy': 0,
+            'sadness': 0,
+            'surprise': 0,
+            'trust': 0,
+            'positive': 0,
+            'negative': 0
+        };
+
+        const defaultBarColors = [
+            'red', 'green', 'blue', 'orange', 'brown',
+            'purple', 'cyan', 'magenta', 'yellow', 'pink'
+        ];
+
+        let chart;
+
+        function createChart(data) {
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const labels = Object.keys(data);
+            const values = Object.values(data);
+
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        backgroundColor: defaultBarColors,
+                        data: values
+                    }]
+                },
+                options: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: "All Emotions"
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            },
+                            gridLines: {
+                                display: false
+                            }
+                        }],
+                        xAxes: [{
+                            gridLines: {
+                                display: false
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
+        async function fetchData(analysiscontent) {
+            try {
+                const response = await fetch('/sentiment/analyzeContent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ analysiscontent })
+                });
+                const data = await response.json();
+                console.log(data);
+                return data.emotions_count;
+            } catch (error) {
+                console.error('Error fetching emotions:', error);
+            }
+        }
+
+        function updateChart(data) {
+            const values = Object.values(data);
+            console.log(values);
+            chart.data.datasets[0].data = values;
+            chart.update();
+        }
+
+        document.getElementById('analysisForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const analysiscontent = document.getElementById('input1').value;
+            const emotions = await fetchData(analysiscontent);
+            updateChart(emotions);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createChart(defaultData);
+        });
+    </script>
+</body>
+</html>
