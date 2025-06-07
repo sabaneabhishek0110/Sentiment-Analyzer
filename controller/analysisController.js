@@ -74,14 +74,14 @@ const analyzeContent = async ( req, res ) => {
 const analyzeContent = async (req, res) => {
     const { analysiscontent } = req.body;
     console.log('Received content for analysis:', analysiscontent);
-    const filePath = "E:/abhishek/SA/Sentiment Analysis New 13-7-2024/Sentiment Analysis/Data/content.txt";
+    const filePath = "D:/Sentiment Analysis/Data/content.txt";
     try {
         await fs.promises.writeFile( filePath, analysiscontent );
     } catch ( error ) {
         console.error( 'Error writing file:', error );
         return res.status( 500 ).send( 'Error writing file' );
     }
-    const pythonProcess = spawn('python', ["E:/abhishek/SA/Sentiment Analysis New 13-7-2024/Sentiment Analysis/SentimentAnalysis.py", analysiscontent]);
+    const pythonProcess = spawn('python', ["D:/Sentiment Analysis/SentimentAnalysis.py", analysiscontent]);
 
     let outputData = '';
     pythonProcess.stdout.on('data', (data) => {

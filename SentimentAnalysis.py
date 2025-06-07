@@ -17,7 +17,7 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 nrc_lexicon = {}
 # Load the NRC Emotion Lexicon
-with open('E:/abhishek/SA/Sentiment Analysis New 13-7-2024/Sentiment Analysis/NRC-Emotion-Lexicon/NRC-Emotion-Lexicon/NRC-Emotion-Lexicon-Wordlevel-v0.92.txt', 'r') as file:
+with open('D:/Sentiment Analysis/NRC-Emotion-Lexicon/NRC-Emotion-Lexicon/NRC-Emotion-Lexicon-Wordlevel-v0.92.txt', 'r') as file:
     reader = csv.reader(file, delimiter='\t')
     for row in reader:
         word, emotion, association = row
