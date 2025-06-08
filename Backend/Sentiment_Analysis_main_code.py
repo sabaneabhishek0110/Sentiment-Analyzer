@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import csv
 import speech_recognition as sr
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import os
 
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -164,7 +165,8 @@ async def analyze_text(request : TextRequest):
 #         raise HTTPException(status_code=500, detail=str(e))
     
 
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0",port=5000)
-
+    port = int(os.environ.get("PORT", 5000)) 
+    uvicorn.run(app, host="0.0.0.0", port=port)
