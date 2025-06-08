@@ -168,5 +168,5 @@ async def analyze_text(request : TextRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.environ.get("PORT", 5000)) 
+    port = int(os.environ.get("PORT", 5000)) #yiou  can change port value for local test 
     uvicorn.run(app, host="0.0.0.0", port=port)
