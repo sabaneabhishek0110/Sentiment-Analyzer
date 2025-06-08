@@ -21,7 +21,7 @@ app = FastAPI()
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Adjust for production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -120,7 +120,7 @@ async def analyze_text(request : TextRequest):
         print(w)
 
         # Vadar's Model
-        # score = SentimentIntensityAnalyzer().polarity_scores(cleaned_text)
+        # sentiment_scores = SentimentIntensityAnalyzer().polarity_scores(cleaned_text)
         # neg = score['neg']
         # pos = score['pos']
         # sentiment = "neutral"
@@ -144,22 +144,24 @@ async def analyze_text(request : TextRequest):
         print(f"Analysis error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/speech_to_text")
-async def speech_to_text():
-    r = sr.Recognizer()
 
-    try:
-        with sr.Microphone() as source2:
-            print("Speech is Recognising.....")
-            # Prepare Recognizer to recieve input
-            r.adjust_for_ambient_noise(source2, duration=0.2)
-            # Listen for users input
-            audio2 = r.listen(source2)
-            # Using google to recognize audio
-            text = r.recognize_google(audio2)
-            return {"success" : True,"text" : text}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+# As this speech to text recognition does not support render using machine microphone so instead fo this speech done at frontend side
+# @app.post("/speech_to_text")
+# async def speech_to_text():
+#     r = sr.Recognizer()
+
+#     try:
+#         with sr.Microphone() as source2:
+#             print("Speech is Recognising.....")
+#             # Prepare Recognizer to recieve input
+#             r.adjust_for_ambient_noise(source2, duration=0.2)
+#             # Listen for users input
+#             audio2 = r.listen(source2)
+#             # Using google to recognize audio
+#             text = r.recognize_google(audio2)
+#             return {"success" : True,"text" : text}
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
     
 
 if __name__ == "__main__":
