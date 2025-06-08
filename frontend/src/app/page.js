@@ -383,7 +383,7 @@ export default function SentimentAnalysis() {
                               transition={{ delay: 0.2 }}
                               className="bg-white p-4 rounded-xl shadow-md"
                           >
-                              <h4 className="text-lg font-semibold text-center mb-4">Emotion Distribution</h4>
+                              <h4 className="text-lg font-semibold text-center mb-4 text-blue-800">Emotion Distribution</h4>
                               <div className="h-80 relative">
                               <Doughnut 
                                   data={chartData} 
@@ -407,7 +407,7 @@ export default function SentimentAnalysis() {
                               transition={{ delay: 0.4 }}
                               className="bg-white p-4 rounded-xl shadow-md"
                           >
-                              <h4 className="text-lg font-semibold text-center mb-4">Emotion Profile</h4>
+                              <h4 className="text-lg font-semibold text-center mb-4 text-blue-800">Emotion Profile</h4>
                               <div className="h-80">
                               <Radar 
                                   data={{
