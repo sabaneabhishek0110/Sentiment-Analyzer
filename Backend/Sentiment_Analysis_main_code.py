@@ -88,7 +88,7 @@ async def analyze_text(request : TextRequest):
         lowercase = text.lower()
         cleaned_text = lowercase.translate(str.maketrans(" ", " ", string.punctuation))
 
-        Tokenised_words = word_tokenize(cleaned_text, "english")
+        Tokenised_words = word_tokenize(cleaned_text)
 
         final_words = []
         for word in Tokenised_words:
