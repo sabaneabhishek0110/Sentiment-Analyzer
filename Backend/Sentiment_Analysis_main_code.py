@@ -13,9 +13,13 @@ import speech_recognition as sr
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import os
 
+# Download NLTK data and set data path
+nltk.data.path.append("/tmp/nltk_data")
+os.makedirs("/tmp/nltk_data", exist_ok=True)
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('vader_lexicon')
+nltk.download('punkt_tab')
 
 app = FastAPI()
 
@@ -37,7 +41,7 @@ with open('NRC-Emotion-Lexicon/NRC-Emotion-Lexicon-Wordlevel-v0.92.txt', 'r') as
         if word not in nrc_lexicon:
             nrc_lexicon[word] = {}
         nrc_lexicon[word][emotion] = int(association)
-
+        
 class TextRequest(BaseModel):
     text: str
 
